@@ -30572,4 +30572,23 @@ $provide.value("$locale", {
 
 })(window, document);
 
-!window.angular.$$csp().noInlineStyle && window.angular.element(document.head).prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}</style>');;
+!window.angular.$$csp().noInlineStyle && window.angular.element(document.head).prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}</style>');;// Defino el módulo moviedb con los [] que son sus dependencias
+angular.module("moviedb", []);;// En el modulo moviedb, defino el controlador
+angular.module('moviedb').controller("MenuController", ["$scope", function($scope) { //Inyectamos dependencia de scope
+    //Scope init
+    $scope.model = {
+        selectedItem: "movies"
+    };
+
+    $scope.setSelectedItem = function(item) {
+        $scope.model.selectedItem = item;
+    };
+
+    $scope.getClassForItem = function(item) {
+        if ($scope.model.selectedItem == item){
+        	return "active";
+        }else{
+        	return "";
+        }
+    };
+}]);
