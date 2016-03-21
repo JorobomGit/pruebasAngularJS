@@ -5,6 +5,8 @@ angular.module('moviedb').controller("MenuController", ["$scope", function($scop
         selectedItem: "movies"
     };
 
+    //Scope methods
+
     $scope.setSelectedItem = function(item) {
         $scope.model.selectedItem = item;
     };
@@ -16,4 +18,11 @@ angular.module('moviedb').controller("MenuController", ["$scope", function($scop
         	return "";
         }
     };
+
+
+    //Scope watchers
+    $scope.$watch("model.selectedItem", function(newValue, oldValue){
+    	//Emitimos elemento a OnMenuChange con el nuevo valor
+    	$scope.$emit("OnMenuChange", newValue);
+    })
 }]);
