@@ -9,9 +9,9 @@ angular.module("moviedb").controller("MoviesListController",
         // Controller start
         MovieService.getMovies().then(
             //promesa resuelta
-            function(data) {
-            	$log.log("SUCCESS", data);
-            	$scope.model = data;
+            function(response) {
+            	$log.log("SUCCESS", response.data);
+            	$scope.model = response.data;
             	if($scope.model.length == 0){
             		$scope.uiState = 'blank';	
             	}else{
@@ -20,8 +20,8 @@ angular.module("moviedb").controller("MoviesListController",
             	
             },
             // promesa rechazada
-            function(data) {
-            	$log.error("ERROR", data);
+            function(response) {
+            	$log.error("ERROR", response);
             	$scope.uiState = 'error';
             }
         );
