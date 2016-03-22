@@ -1,11 +1,11 @@
 // Defino el módulo moviedb con los [] que son sus dependencias
 angular.module("moviedb", ['ngRoute']).config(['$routeProvider', function($routeProvider) {
 	//Configuro las URLs de la aplicación
-	$routeProvider.when('/movies/', {
+	$routeProvider.when('/movies', {
 		templateUrl: 'views/MoviesList.html'
-	}).when('/series/', {
+	}).when('/series', {
 		templateUrl: 'views/SeriesList.html'
-	}).when('/people/', {
+	}).when('/people', {
 		templateUrl: 'views/PeopleList.html'
 	}).when('/', {
 		redirectTo: '/movies'

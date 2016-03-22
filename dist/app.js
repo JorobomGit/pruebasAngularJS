@@ -31592,11 +31592,11 @@ function ngViewFillContentFactory($compile, $controller, $route) {
 ;// Defino el módulo moviedb con los [] que son sus dependencias
 angular.module("moviedb", ['ngRoute']).config(['$routeProvider', function($routeProvider) {
 	//Configuro las URLs de la aplicación
-	$routeProvider.when('/movies/', {
+	$routeProvider.when('/movies', {
 		templateUrl: 'views/MoviesList.html'
-	}).when('/series/', {
+	}).when('/series', {
 		templateUrl: 'views/SeriesList.html'
-	}).when('/people/', {
+	}).when('/people', {
 		templateUrl: 'views/PeopleList.html'
 	}).when('/', {
 		redirectTo: '/movies'
@@ -31614,9 +31614,9 @@ angular.module("moviedb", ['ngRoute']).config(['$routeProvider', function($route
 
         //Controller properties
         controller.titles = {
-            "/movies/": "Movies List",
-            "/series/": "Series List",
-            "/people/": "People List"
+            "/movies": "Movies List",
+            "/series": "Series List",
+            "/people": "People List"
 
 
         };
@@ -31657,8 +31657,49 @@ angular.module('moviedb').controller("MenuController", ["$scope", "$location", f
     });
 }]);;angular.module("moviedb").controller("MoviesListController",
 
-    ["$scope", function($scope) {
-    	//Model init
-        $scope.name= "Joseba";
+    ["$scope", "MovieService", function($scope, MovieService) {
+        // Scope init
+        $scope.uiState = 'blank';
+        $scope.model = [];
+
+        // Scope watchers
+        $scope.$watch("model", function(newValue, oldValue){
+        	if(newValue.length == 0){
+        		$scope.uiState = 'blank';        		
+        	} else {
+        		$scope.uiState = 'ideal';
+        	}
+        })
+
+        // Controller start
+        $scope.model = MovieService.getMovies();
     }]
-);
+);;angular.module("moviedb").service("MovieService", [function() {
+	this.getMovies = function(){
+		return [
+		{
+        	"title": "Deadpool",
+        	"poster_url": "https://image.tmdb.org/t/p/w185/kS3pI9nSLZuX8CAzaQOBF6mQ3uX.jpg",
+        	"rating": 7.2,
+        	"release_date": "2016-12-09"
+        },
+        {
+        	"title": "Los Juegos del Hambre",
+        	"poster_url": "https://image.tmdb.org/t/p/w185/sv4UUyQxP3qCp7kArPhZk1JlAj8.jpg",
+        	"rating": 6.8,
+        	"release_date": "2015-11-27"
+        },
+        {
+        	"title": "Batman v Superman",
+        	"poster_url": "https://image.tmdb.org/t/p/w185/6bCplVkhowCjTHXWv49UjRPn0eK.jpg",
+        	"rating": 5.1,
+        	"release_date": "2016-03-23"
+        },
+        {
+        	"title": "Interstellar",
+        	"poster_url": "https://image.tmdb.org/t/p/w185/7C0oiPn46OvaMxET9iq1f5BsyMS.jpg",
+        	"rating": 8.2,
+        	"release_date": "2014-11-07"
+        }];
+	}
+}]);

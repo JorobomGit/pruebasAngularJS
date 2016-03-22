@@ -21,13 +21,13 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li ng-class="getClassForItem('/movies/')">
+                    <li ng-class="getClassForItem('/movies')">
                         <a href="#/movies">Movies</a>
                     </li>
-                    <li ng-class="getClassForItem('/series/')">
+                    <li ng-class="getClassForItem('/series')">
                         <a href="#/series">Series</a>
                     </li>
-                    <li ng-class="getClassForItem('/people/')">
+                    <li ng-class="getClassForItem('/people')">
                         <a href="#/people">People</a>
                     </li>
                 </ul>
@@ -37,7 +37,7 @@
         <!-- /.container-fluid -->
         Selected item: {{ model.selectedItem }}
     </nav>
-    <div class="container" ng-controller="MoviesListController">
+    <div class="container">
     	<div class="row">
     		<div class="col-xs-12">
                 <div ng-view></div>

@@ -7,9 +7,9 @@ angular.module("moviedb").controller("AppController",
 
         //Controller properties
         controller.titles = {
-            "/movies/": "Movies List",
-            "/series/": "Series List",
-            "/people/": "People List"
+            "/movies": "Movies List",
+            "/series": "Series List",
+            "/people": "People List"
 
 
         };
