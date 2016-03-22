@@ -1,17 +1,29 @@
 angular.module("moviedb").controller("AppController",
 
-    ["$scope", function($scope) {
+    //Cada vez que queramos utilizar un servicio lo tenemos que inyectar tanto como parametro como
+    //en la funcion
+    ["$scope", "$location", function($scope, $location) {
+        var controller = this;
+
+        //Controller properties
+        controller.titles = {
+            "/movies/": "Movies List",
+            "/series/": "Series List",
+            "/people/": "People List"
+
+
+        };
 
     	//Model init
         $scope.model = {
             title: ""
         }
 
-        //Scope event listeners
-        $scope.$on('OnMenuChange', function(evt, data){
-        	console.log("OnMenuChange", arguments);
-        	console.log(arguments[1]);
-        	$scope.model.title = data;
+
+        $scope.$on("$locationChangeSuccess", function(evt, currentRoute){
+            console.log("$locationChangeSuccess", $location.path());
+            $scope.model.title = controller.titles[$location.path()] || "404 Not Found";            
+
         });
     }]
 );
