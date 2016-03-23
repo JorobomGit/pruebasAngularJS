@@ -22,7 +22,7 @@ angular.module("moviedb").service("MovieService", ["$http", "$q", "apiPath", "UR
     }
 
     this.getMovies = function() {
-        return this.apiRequest(apiPaths.movies);
+        return this.apiRequest(apiPath.movies);
     };
 
     this.getMovie = function(movieId){
