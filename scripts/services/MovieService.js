@@ -1,23 +1,32 @@
-angular.module("moviedb").service("MovieService", ["$http", "$q", function($http, $q) {
-    this.getMovies = function() {
-        //Hay que devolver las películas, no un objeto de la petición
+angular.module("moviedb").service("MovieService", ["$http", "$q", "apiPath", "URL", function($http, $q, apiPath, URL) {
+    this.apiRequest = function(url){
+     //Hay que devolver las películas, no un objeto de la petición
         //Por lo que habrá que resolver el retorno de http.get
         //Crear el objeto diferido
         var deferred = $q.defer();
         //Hacer trabajo asíncrono
-        $http.get('/api/movies').then(
+        $http.get(url).then(
             function(response) {
-            	//Resolvemos promesa
+                //Resolvemos promesa
                 deferred.resolve(response.data);
             },
             function(response) {
-            	//Rechazar promesa
-            	//Esta gestión de error es bastante pobre, habría que mejorarla
+                //Rechazar promesa
+                //Esta gestión de error es bastante pobre, habría que mejorarla
                 deferred.reject(response.data);
             }
         );
-        //Devolver promesa    	
+        //Devolver promesa      
         return deferred.promise;
         // return $http.get('/api/movies');
     }
+
+    this.getMovies = function() {
+        return this.apiRequest(apiPaths.movies);
+    };
+
+    this.getMovie = function(movieId){
+        var url = URL.resolve(apiPath.movieDetail, {id: movieId});
+        return this.apiRequest(url);
+    };
 }]);

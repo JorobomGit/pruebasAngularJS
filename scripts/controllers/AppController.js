@@ -5,15 +5,11 @@ angular.module("moviedb").controller("AppController",
     ["$scope", "$location", "paths", function($scope, $location, paths) {
         var controller = this;
 
-        var movies = paths.movies;
-        var series = paths.series;
-        var people = paths.people;
-        //Controller properties
-        controller.titles = {
-            movies: "Movies List",
-            series: "Series List",
-            people: "People List"
-        };
+        controller.titles = {};
+        controller.titles[paths.movies] = "Movies List";
+        controller.titles[paths.series] = "Series List";
+        controller.titles[paths.people] = "People List";
+
 
         //Model init
         $scope.model = {
