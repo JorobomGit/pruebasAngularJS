@@ -36264,7 +36264,7 @@ angular.module('moviedb').controller("MenuController", ["$scope", "$location", "
 		// terminal: true,
 		 scope: {
 		 	model: "=items",
-		 	getDetailUrl: "="
+		 	getDetailUrl: "&"
 		 }, // {} = isolate, true = child, false/undefined = no change
 		// controller: function($scope, $element, $attrs, $transclude) {},
 		// require: 'ngModel', // Array = multiple requires, ? = optional, ^ = check parent elements
