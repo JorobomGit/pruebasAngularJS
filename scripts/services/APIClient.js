@@ -1,4 +1,4 @@
-angular.module("moviedb").service("MovieService", ["$http", "$q", "apiPath", "URL", function($http, $q, apiPath, URL) {
+angular.module("moviedb").service("APIClient", ["$http", "$q", "apiPath", "URL", function($http, $q, apiPath, URL) {
     this.apiRequest = function(url){
      //Hay que devolver las películas, no un objeto de la petición
         //Por lo que habrá que resolver el retorno de http.get
@@ -29,4 +29,14 @@ angular.module("moviedb").service("MovieService", ["$http", "$q", "apiPath", "UR
         var url = URL.resolve(apiPath.movieDetail, {id: movieId});
         return this.apiRequest(url);
     };
+
+    this.getSeries = function() {
+        return this.apiRequest(apiPath.series);
+    };
+
+    this.getSerie = function(serieId){
+        var url = URL.resolve(apiPath.serieDetail, {id: serieId});
+        return this.apiRequest(url);
+    };
+
 }]);

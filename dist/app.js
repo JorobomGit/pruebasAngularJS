@@ -36199,14 +36199,14 @@ angular.module('moviedb').controller("MenuController", ["$scope", "$location", "
     $scope.$on("$locationChangeSuccess", function(evt, currentRoute) {
         $scope.model.selectedItem = $location.path();
     });
-}]);;angular.module("moviedb").controller("MovieDetailController", ["$scope", "$routeParams", "$location", "MovieService", "paths",
+}]);;angular.module("moviedb").controller("MovieDetailController", ["$scope", "$routeParams", "$location", "APIClient", "paths",
 
-    function($scope, $routeParams, $location, MovieService, paths) {
+    function($scope, $routeParams, $location, APIClient, paths) {
         $scope.model = {};
         $scope.uiState = 'loading';
 
         $scope.$emit("ChangeTitle", "Loading...");
-        MovieService.getMovie($routeParams.id).then(
+        APIClient.getMovie($routeParams.id).then(
             // Pelicula encontrada
             function(movie) {
                 $scope.model = movie;
@@ -36223,7 +36223,7 @@ angular.module('moviedb').controller("MenuController", ["$scope", "$location", "
 ]);
 ;angular.module("moviedb").controller("MoviesListController",
 
-    ["$scope", "$log", "MovieService", "URL", "paths", function($scope, $log, MovieService, URL, paths) {
+    ["$scope", "$log", "APIClient", "URL", "paths", function($scope, $log, APIClient, URL, paths) {
         // Scope init
         //$scope.uiState = 'blank';
         $scope.model = [];
@@ -36234,7 +36234,7 @@ angular.module('moviedb').controller("MenuController", ["$scope", "$location", "
         }
 
         // Controller start
-        MovieService.getMovies().then(
+        APIClient.getMovies().then(
             //promesa resuelta
             function(data) {
                 $log.log("SUCCESS", data);
@@ -36253,7 +36253,32 @@ angular.module('moviedb').controller("MenuController", ["$scope", "$location", "
             }
         );
     }]
-);;angular.module("moviedb").filter("ago", [function() {
+);;angular.module("moviedb").controller("SeriesListController", ["$scope", "$log", "APIClient", "URL", "paths", function($scope, $log, APIClient, URL, paths) {
+
+}]);
+;angular.module("moviedb").directive('mediaItemList', function(){
+	// Runs during compile
+	return {
+		// name: '',
+		// priority: 1,
+		// terminal: true,
+		 scope: {
+		 	model: "=items",
+		 	getDetailUrl: "="
+		 }, // {} = isolate, true = child, false/undefined = no change
+		// controller: function($scope, $element, $attrs, $transclude) {},
+		// require: 'ngModel', // Array = multiple requires, ? = optional, ^ = check parent elements
+		 restrict: 'AE', // E = Element, A = Attribute, C = Class, M = Comment
+		// template: '',
+		 templateUrl: 'views/mediaItemList.html',
+		// replace: true,
+		// transclude: true,
+		// compile: function(tElement, tAttrs, function transclude(function(scope, cloneLinkingFn){ return function linking(scope, elm, attrs){}})),
+		link: function($scope, iElm, iAttrs, controller) {
+			
+		}
+	};
+});;angular.module("moviedb").filter("ago", [function() {
     return function(text) {
         return moment(text).fromNow();
     }
@@ -36277,7 +36302,7 @@ angular.module('moviedb').controller("MenuController", ["$scope", "$location", "
             return (mode == "US") ? "E" : "IN";
         }
     }
-}]);;angular.module("moviedb").service("MovieService", ["$http", "$q", "apiPath", "URL", function($http, $q, apiPath, URL) {
+}]);;angular.module("moviedb").service("APIClient", ["$http", "$q", "apiPath", "URL", function($http, $q, apiPath, URL) {
     this.apiRequest = function(url){
      //Hay que devolver las películas, no un objeto de la petición
         //Por lo que habrá que resolver el retorno de http.get
@@ -36308,6 +36333,16 @@ angular.module('moviedb').controller("MenuController", ["$scope", "$location", "
         var url = URL.resolve(apiPath.movieDetail, {id: movieId});
         return this.apiRequest(url);
     };
+
+    this.getSeries = function() {
+        return this.apiRequest(apiPath.series);
+    };
+
+    this.getSerie = function(serieId){
+        var url = URL.resolve(apiPath.serieDetail, {id: serieId});
+        return this.apiRequest(url);
+    };
+
 }]);;angular.module("URL", []).service("URL", ["$log", function($log) {
 
     this.resolve = function(url, params) {
@@ -36331,5 +36366,7 @@ angular.module('moviedb').controller("MenuController", ["$scope", "$location", "
     }
 }]);;angular.module("moviedb").value("apiPath", {
 	movies: "/api/movies",
-	movieDetail: "/api/movies/:id"
+	movieDetail: "/api/movies/:id",
+	series: "/api/series",
+	serieDetail: "/api/series/:id"
 });
