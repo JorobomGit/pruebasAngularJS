@@ -36123,28 +36123,33 @@ angular.module('ngSanitize').filter('linky', ['$sanitize', function($sanitize) {
     return _moment;
 
 }));;// Defino el módulo moviedb con los [] que son sus dependencias
-angular.module("moviedb", ['ngRoute', 'ngSanitize', 'URL']).config(['$routeProvider', "paths",function($routeProvider, paths) {
-	//Configuro las URLs de la aplicación
-	$routeProvider.when(paths.movies, {
-		templateUrl: 'views/MoviesList.html'
-	}).when(paths.movieDetail, {
-		templateUrl: 'views/MovieDetail.html'
-	}).when(paths.series, {
-		templateUrl: 'views/SeriesList.html'
-	}).when(paths.people, {
-		templateUrl: 'views/PeopleList.html'
-	}).when(paths.home, {
-		redirectTo: '/movies'
-	}).otherwise({
-		templateUrl: 'views/404.html'
-	});
-	
+angular.module("moviedb", ['ngRoute', 'ngSanitize', 'URL']).config(['$routeProvider', "paths", function($routeProvider, paths) {
+    //Configuro las URLs de la aplicación
+    $routeProvider.when(paths.movies, {
+        templateUrl: 'views/MoviesList.html'
+    }).when(paths.movieDetail, {
+    	controller: 'MovieDetailController',
+        templateUrl: 'views/MediaItemDetail.html'
+    }).when(paths.series, {
+        templateUrl: 'views/SeriesList.html'
+    }).when(paths.serieDetail, {
+    	controller: 'SerieDetailController',
+        templateUrl: 'views/MediaItemDetail.html'
+    }).when(paths.people, {
+        templateUrl: 'views/PeopleList.html'
+    }).when(paths.home, {
+        redirectTo: '/movies'
+    }).otherwise({
+        templateUrl: 'views/404.html'
+    });
+
 }]);
 ;angular.module("moviedb").constant("paths", {
 	home: "/",
 	movies: "/movies",
 	movieDetail: "/movies/:id",
 	series: "/series",
+	serieDetail: "/series/:id",
 	people: "/people",
 	notFound: "/sorry"
 });angular.module("moviedb").controller("AppController",
@@ -36253,10 +36258,69 @@ angular.module('moviedb').controller("MenuController", ["$scope", "$location", "
             }
         );
     }]
-);;angular.module("moviedb").controller("SeriesListController", ["$scope", "$log", "APIClient", "URL", "paths", function($scope, $log, APIClient, URL, paths) {
+);;angular.module("moviedb").controller("SerieDetailController", ["$scope", "$routeParams", "$location", "APIClient", "paths",
 
-}]);
-;angular.module("moviedb").directive('mediaItemList', function(){
+    function($scope, $routeParams, $location, APIClient, paths) {
+        $scope.model = {};
+        $scope.uiState = 'loading';
+
+        $scope.$emit("ChangeTitle", "Loading...");
+        APIClient.getSerie($routeParams.id).then(
+            // Pelicula encontrada
+            function(serie) {
+                $scope.model = serie;
+                $scope.uiState = 'ideal';
+                $scope.$emit("ChangeTitle", $scope.model.title);
+            },
+            // Pelicula no encontrada
+            function(error) {
+                // TODO: improve error managment
+                $location.url(paths.notFound);
+            }
+        );
+    }
+]);
+;angular.module("moviedb").controller("SeriesListController",
+
+    ["$scope", "$log", "APIClient", "URL", "paths", function($scope, $log, APIClient, URL, paths) {
+        // Scope init
+        //$scope.uiState = 'blank';
+        $scope.model = [];
+        $scope.uiState = 'loading';
+
+        $scope.getSerieDetailURL = function(serie){
+            return URL.resolve(paths.serieDetail, { id: serie.id});
+        }
+
+        // Controller start
+        APIClient.getSeries().then(
+            //promesa resuelta
+            function(data) {
+                $log.log("SUCCESS", data);
+                $scope.model = data;
+                if ($scope.model.length == 0) {
+                    $scope.uiState = 'blank';
+                } else {
+                    $scope.uiState = 'ideal';
+                }
+
+            },
+            // promesa rechazada
+            function(data) {
+                $log.error("ERROR", data);
+                $scope.uiState = 'error';
+            }
+        );
+    }]
+);;angular.module("moviedb").directive("mediaItem", function () {
+	return {
+	 	restrict: "AE",
+	 	templateUrl: "views/mediaItem.html",
+	 	scope: {
+	 		model: "=item"
+	 	}
+	}
+});angular.module("moviedb").directive('mediaItemList', function(){
 	// Runs during compile
 	return {
 		// name: '',
@@ -36280,6 +36344,7 @@ angular.module('moviedb').controller("MenuController", ["$scope", "$location", "
 	};
 });;angular.module("moviedb").filter("ago", [function() {
     return function(text) {
+    	console.log(text);
         return moment(text).fromNow();
     }
 }]);;angular.module("moviedb").filter("categories", [function() {
