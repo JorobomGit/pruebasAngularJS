@@ -4,11 +4,13 @@ angular.module("moviedb").controller("MovieDetailController", ["$scope", "$route
         $scope.model = {};
         $scope.uiState = 'loading';
 
+        $scope.$emit("ChangeTitle", "Loading...");
         MovieService.getMovie($routeParams.id).then(
             // Pelicula encontrada
             function(movie) {
                 $scope.model = movie;
                 $scope.uiState = 'ideal';
+                $scope.$emit("ChangeTitle", $scope.model.title);
             },
             // Pelicula no encontrada
             function(error) {

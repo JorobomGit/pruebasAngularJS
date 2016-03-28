@@ -22,5 +22,9 @@ angular.module("moviedb").controller("AppController",
             $scope.model.title = controller.titles[$location.path()] || "404 Not Found";
 
         });
+
+        $scope.$on("ChangeTitle", function(evt, title){
+            $scope.model.title = title;
+        });
     }]
 );
