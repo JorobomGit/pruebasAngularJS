@@ -36128,6 +36128,7 @@ angular.module("moviedb", ['ngRoute', 'ngSanitize', 'URL']).config(['$routeProvi
     $routeProvider.when(paths.movies, {
         templateUrl: 'views/MoviesList.html'
     }).when(paths.newMovie, {
+        controller: 'MovieFormController',
         templateUrl: 'views/NewMovie.html'
     }).when(paths.movieDetail, {
     	controller: 'MovieDetailController',
@@ -36229,6 +36230,27 @@ angular.module('moviedb').controller("MenuController", ["$scope", "$location", "
         );
     }
 ]);
+;angular.module('moviedb').controller("MovieFormController", ["$scope", "APIClient", function($scope, APIClient) {
+    //Scope init
+    $scope.model = {};
+    $scope.successMessage = null;
+    $scope.errorMessage = null;
+    //Scope methods
+
+    $scope.saveMovie = function() {
+        APIClient.createMovie($scope.model).then(
+            function(movie) {
+                $scope.successMessage = "Movie saved! <a href='#/movies/"+ movie.id + "'>View new movie detail</a>";
+                $scope.model = {};
+                $scope.movieForm.$setPristine();
+            },
+            function(error) {
+                $scope.errorMessage = "Fatal error. The end is near.";
+            }
+        )
+    };
+
+}]);
 ;angular.module("moviedb").controller("MoviesListController",
 
     ["$scope", "$log", "APIClient", "URL", "paths", function($scope, $log, APIClient, URL, paths) {
@@ -36418,8 +36440,8 @@ angular.module('moviedb').controller("MenuController", ["$scope", "$location", "
         }
     }
 }]);;angular.module("moviedb").service("APIClient", ["$http", "$q", "apiPath", "URL", function($http, $q, apiPath, URL) {
-    this.apiRequest = function(url){
-     //Hay que devolver las películas, no un objeto de la petición
+    this.apiRequest = function(url) {
+        //Hay que devolver las películas, no un objeto de la petición
         //Por lo que habrá que resolver el retorno de http.get
         //Crear el objeto diferido
         var deferred = $q.defer();
@@ -36444,8 +36466,8 @@ angular.module('moviedb').controller("MenuController", ["$scope", "$location", "
         return this.apiRequest(apiPath.movies);
     };
 
-    this.getMovie = function(movieId){
-        var url = URL.resolve(apiPath.movieDetail, {id: movieId});
+    this.getMovie = function(movieId) {
+        var url = URL.resolve(apiPath.movieDetail, { id: movieId });
         return this.apiRequest(url);
     };
 
@@ -36453,12 +36475,34 @@ angular.module('moviedb').controller("MenuController", ["$scope", "$location", "
         return this.apiRequest(apiPath.series);
     };
 
-    this.getSerie = function(serieId){
-        var url = URL.resolve(apiPath.serieDetail, {id: serieId});
+    this.getSerie = function(serieId) {
+        var url = URL.resolve(apiPath.serieDetail, { id: serieId });
         return this.apiRequest(url);
     };
 
-}]);;angular.module("URL", []).service("URL", ["$log", function($log) {
+    this.createMovie = function(movie) {
+
+        //Crear el objeto diferido
+        var deferred = $q.defer();
+        //Hacer trabajo asíncrono
+        $http.post(apiPath.movies, movie).then(
+            function(response) {
+                //Resolvemos promesa
+                deferred.resolve(response.data);
+            },
+            function(response) {
+                //Rechazar promesa
+                //Esta gestión de error es bastante pobre, habría que mejorarla
+                deferred.reject(response.data);
+            }
+        );
+        //Devolver promesa      
+        return deferred.promise;
+        // return $http.get('/api/movies');
+    };
+
+}]);
+;angular.module("URL", []).service("URL", ["$log", function($log) {
 
     this.resolve = function(url, params) {
         var finalURL = [];
